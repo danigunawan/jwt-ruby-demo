@@ -7,10 +7,10 @@ class SessionsController < ApplicationController
     if user.authenticate(params[:password])
       require 'jwt'
       payload = {data: "test"}
-      puts "hello"
-      token = JWT.encode payload, ENV["jwt_secret"], true, {algorithm: "HS256"}
+      puts JWT_SECRET
+      token = JWT.encode payload, "thisissecretkey", "HS256"
       respond_to do |format|
-        format.json { render json: token }
+        format.json { render json: { token: token } }
         # format.html { redirect_to dashboard_path}
       end
     else
