@@ -12,7 +12,7 @@ class UsersController < ApplicationController
       end
     else
       respond_to do |format|
-        format.json{ "Failed to create a user." }
+        format.json{ render json: "Failed to create a user." }
         format.html{ render :new }
       end
     end

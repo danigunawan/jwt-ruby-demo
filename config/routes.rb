@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   resources :homes
   resources :users
   root 'homes#index'
+  get 'dashboard' => 'homes#dashboard'
 end
