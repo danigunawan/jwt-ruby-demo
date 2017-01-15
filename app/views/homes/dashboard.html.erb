@@ -1,4 +1,4 @@
 <div>
-  Welcome to Dashboard, <%= current_user.name %>
-  <%= link_to "Sign Out", session_path(current_user.id), method: :delete %>
+  Welcome to Dashboard, <%= @current_user['name'] %>
+  <%= link_to "Sign Out", session_path(@current_user['id']), method: :delete %>
 </div>

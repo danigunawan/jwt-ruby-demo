@@ -6,6 +6,6 @@ Rails.application.routes.draw do
   resources :users
   get 'home' => "homes#index"
   # root 'homes#index'
-  root 'sessions#new'
+  root 'homes#dashboard'
   get 'dashboard' => 'homes#dashboard'
 end

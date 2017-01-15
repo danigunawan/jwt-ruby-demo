@@ -6,10 +6,9 @@ class SessionsController < ApplicationController
     @user = User.find_by(email: params[:user][:email])
     if @user.authenticate(params[:user][:password])
       require 'jwt'
-      payload = { name: @user.name }
+      payload = { exp: Time.now.to_i + 10, id: @user.id, name: @user.name }
       token = JWT.encode payload, Rails.application.secrets.JWT_SECRET, "HS256"
-      session[:current_user_id] = @user.id
-      session[:last_login_time] = Time.now
+      session[:access_token] = token
       respond_to do |format|
         format.json { render json: { token: token } }
         format.html { redirect_to dashboard_path, notice: "Signed in successfully!" }
