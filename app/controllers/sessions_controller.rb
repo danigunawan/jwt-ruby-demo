@@ -9,6 +9,7 @@ class SessionsController < ApplicationController
       payload = { name: @user.name }
       token = JWT.encode payload, "thisissecretkey", "HS256"
       session[:current_user_id] = @user.id
+      session[:last_login_time] = Time.now
       respond_to do |format|
         format.json { render json: { token: token } }
         format.html { redirect_to dashboard_path, notice: "Signed in successfully!" }
@@ -23,6 +24,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-
+    reset_session
+    redirect_to new_session_path
   end
 end

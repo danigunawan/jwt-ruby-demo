@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   resources :sessions
   resources :homes
   resources :users
-  root 'homes#index'
+  get 'home' => "homes#index"
+  # root 'homes#index'
+  root 'sessions#new'
   get 'dashboard' => 'homes#dashboard'
 end
