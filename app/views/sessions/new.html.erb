@@ -1,6 +1,6 @@
 <div>User Sign In</div>
 
-<%= form_for :users, url: sessions_path, method: :post do |f| %>
+<%= form_for :user, url: sessions_path, method: :post do |f| %>
 Email: <%= f.text_field :email %>
 <br>
 Password: <%= f.password_field :password %>
