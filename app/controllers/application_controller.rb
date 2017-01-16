@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.json { 
         @current_user ||= begin
-          decoded_token = JWT.decode request.headers[:HTTP_AUTHORIZATION].split(' ')[1], Rails.application.secrets.JWT_SECRET, true, { :algorithm => 'HS256' }
+          decoded_token = JsonWebToken.decode(request.headers[:HTTP_AUTHORIZATION].split(' ')[1])
           current_user = decoded_token[0]
         rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
           nil
@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
       }
       format.html { 
         @current_user ||= begin
-          decoded_token = JWT.decode session[:access_token], Rails.application.secrets.JWT_SECRET, true, { :algorithm => 'HS256' }
+          decoded_token = JsonWebToken.decode(session[:access_token])
           current_user = decoded_token[0]
         rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
           nil

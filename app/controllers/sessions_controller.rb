@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
     if @user.authenticate(params[:user][:password])
       require 'jwt'
       payload = { exp: Time.now.to_i + 3600, id: @user.id, name: @user.name }
-      token = JWT.encode payload, Rails.application.secrets.JWT_SECRET, "HS256"
+      token = JsonWebToken.encode(payload)
       session[:access_token] = token
       respond_to do |format|
         format.json { render json: { token: token } }
@@ -28,6 +28,5 @@ class SessionsController < ApplicationController
       format.json{ render json: { message: "Not authorized!" } }
       format.html{ redirect_to new_session_path }
     end
-    
   end
 end
