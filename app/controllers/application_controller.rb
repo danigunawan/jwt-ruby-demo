@@ -5,16 +5,34 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   def authenticate
-    @current_user ||= begin
-      decoded_token = JWT.decode session[:access_token], Rails.application.secrets.JWT_SECRET, true, { :algorithm => 'HS256' }
-      current_user = decoded_token[0]
-    rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
-      nil
+    respond_to do |format|
+      format.json { 
+        @current_user ||= begin
+          decoded_token = JWT.decode request.headers[:HTTP_AUTHORIZATION].split(' ')[1], Rails.application.secrets.JWT_SECRET, true, { :algorithm => 'HS256' }
+          current_user = decoded_token[0]
+        rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
+          nil
+        end
+      }
+      format.html { 
+        @current_user ||= begin
+          decoded_token = JWT.decode session[:access_token], Rails.application.secrets.JWT_SECRET, true, { :algorithm => 'HS256' }
+          current_user = decoded_token[0]
+        rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
+          nil
+        end
+      }
     end
     if @current_user
-      return
+      respond_to do |format|
+        format.json { render json: { current_user: @current_user } }
+        format.html { return }
+      end
     else
-      redirect_to new_session_path
+      respond_to do |format|
+        format.json { render json: { message: "Not authorized!" } }
+        format.html { redirect_to new_session_path }
+      end
     end
 
   end

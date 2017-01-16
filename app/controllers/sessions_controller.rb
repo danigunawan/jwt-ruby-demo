@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
     @user = User.find_by(email: params[:user][:email])
     if @user.authenticate(params[:user][:password])
       require 'jwt'
-      payload = { exp: Time.now.to_i + 10, id: @user.id, name: @user.name }
+      payload = { exp: Time.now.to_i + 3600, id: @user.id, name: @user.name }
       token = JWT.encode payload, Rails.application.secrets.JWT_SECRET, "HS256"
       session[:access_token] = token
       respond_to do |format|
@@ -24,6 +24,10 @@ class SessionsController < ApplicationController
 
   def destroy
     reset_session
-    redirect_to new_session_path
+    respond_to do |format|
+      format.json{ render json: { message: "Not authorized!" } }
+      format.html{ redirect_to new_session_path }
+    end
+    
   end
 end
